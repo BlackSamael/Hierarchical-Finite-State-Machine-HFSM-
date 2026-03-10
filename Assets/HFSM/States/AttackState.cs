@@ -11,7 +11,8 @@ public class AttackState : GroundedState
     public override void Enter()
     {
         attackTimer = 0.5f;
-        context.Animator.Play(StateName);
+        EventBus.Publish(new AttackStartedEvent());
+        //context.Animator.Play(StateName); // Move this to a animation handling class later
     }
 
     public override void Tick()
@@ -20,7 +21,7 @@ public class AttackState : GroundedState
 
         if (attackTimer <= 0f)
         {
-            machine.ChangeState(machine.IdleState);
+            machine.ChangeState(machine.GetState<IdleState>());
         }
     }
 }

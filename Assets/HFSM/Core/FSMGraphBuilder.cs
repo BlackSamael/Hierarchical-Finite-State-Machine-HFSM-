@@ -6,19 +6,11 @@ public static class FSMGraphBuilder
 
         RootState root = new RootState(machine, context);
 
-        IdleState idle = new IdleState(machine, context, root);
-        WalkState walk = new WalkState(machine, context, root);
-        JumpState jump = new JumpState(machine, context, root);
-        AttackState attack = new AttackState(machine, context, root);
-        DeathState death = new DeathState(machine, context, root);
-
-
-        machine.IdleState = idle;
-        machine.WalkState = walk;
-        machine.JumpState = jump;
-        machine.AttackState = attack;
-        machine.DeathState = death;
-
+        var idle = machine.CreateState<IdleState>(context, root);
+        var walk = machine.CreateState<WalkState>(context, root);
+        var jump = machine.CreateState<JumpState>(context, root);
+        var attack = machine.CreateState<AttackState>(context, root);
+        var death = machine.CreateState<DeathState>(context, root);
 
         var moveCondition = new MoveCondition();
         var stopMoveCondition = new StopMoveCondition();
@@ -26,20 +18,15 @@ public static class FSMGraphBuilder
         var attackCondition = new AttackPressedCondition();
         var deathCondition = new DeathCondition();
 
+        machine.AddGlobalTransition(death, deathCondition, 100);
 
-        machine.AddGlobalTransition(death, deathCondition);
+        idle.AddTransition(walk, moveCondition, 10);
+        walk.AddTransition(idle, stopMoveCondition, 10);
 
-        // Movement
-        idle.AddTransition(walk, moveCondition);
-        walk.AddTransition(idle, stopMoveCondition);
+        idle.AddTransition(jump, jumpCondition, 30);
+        walk.AddTransition(jump, jumpCondition, 30);
 
-        // Jump
-        idle.AddTransition(jump, jumpCondition);
-        walk.AddTransition(jump, jumpCondition);
-
-        // Attack
-        idle.AddTransition(attack, attackCondition);
-        walk.AddTransition(attack, attackCondition);
+        idle.AddTransition(attack, attackCondition, 40);
 
         machine.SetInitialState(idle);
 

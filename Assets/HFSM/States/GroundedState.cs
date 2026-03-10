@@ -9,7 +9,7 @@ public class GroundedState : HFSMState
     {
         if (!context.IsGrounded)
         {
-            machine.ChangeState(machine.JumpState);
+            machine.ChangeState(machine.GetState<JumpState>());
         }
     }
 }

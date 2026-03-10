@@ -7,7 +7,9 @@ public class DeathState : HFSMState
 
     public override void Enter()
     {
-        context.ForceDeath = false;
+        context.ForceDeath = false; // Reset the flag to prevent unintended deaths
+        // context.Animator?.Play("Death"); // Move this to a animation handling class later
+        EventBus.Publish(new PlayerDiedEvent());
     }
 
     public override void Tick()

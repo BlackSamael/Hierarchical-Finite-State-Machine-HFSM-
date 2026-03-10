@@ -7,7 +7,8 @@ public class IdleState : GroundedState
 
     public override void Enter()
     {
-        context.Animator?.Play("Idle");
+        context.Animator?.Play("Idle"); // Move this to a animation handling class later
+        EventBus.Publish(new MovementStoppedEvent());
     }
 
     public override void Tick()

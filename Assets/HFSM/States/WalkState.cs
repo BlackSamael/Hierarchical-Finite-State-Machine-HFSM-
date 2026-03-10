@@ -7,7 +7,8 @@ public class WalkState : GroundedState
 
     public override void Enter()
     {
-        context.Animator?.Play("Walk");
+        //context.Animator?.Play("Walk");  // Move this to a animation handling class later
+        EventBus.Publish(new MovementStartedEvent());
     }
 
     public override void Tick()

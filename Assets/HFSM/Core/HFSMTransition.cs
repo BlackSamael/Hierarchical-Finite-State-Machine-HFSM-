@@ -1,16 +1,18 @@
 public class HFSMTransition
 {
     public HFSMState TargetState;
-    private ITransitionCondition condition;
+    public ITransitionCondition Condition;
+    public int Priority;
 
-    public HFSMTransition(HFSMState targetState, ITransitionCondition condition)
+    public HFSMTransition(HFSMState targetState, ITransitionCondition condition, int priority = 0)
     {
         TargetState = targetState;
-        this.condition = condition;
+        Condition = condition;
+        Priority = priority;
     }
 
     public bool ShouldTransition(HFSMContext context)
     {
-        return condition.Evaluate(context);
+        return Condition.Evaluate(context);
     }
 }

@@ -30,19 +30,27 @@ public abstract class HFSMState
         parent?.Tick();
     }
 
-    public void AddTransition(HFSMState targetState, ITransitionCondition condition)
+    public void AddTransition(HFSMState targetState, ITransitionCondition condition, int priority = 0)
     {
-        transitions.Add(new HFSMTransition(targetState, condition));
+        transitions.Add(new HFSMTransition(targetState, condition, priority));
     }
 
     public HFSMState CheckTransitions()
     {
-        foreach (var transition in transitions)
+        HFSMTransition bestTransition = null;
+
+        for (int i = 0; i < transitions.Count; i++)
         {
+            var transition = transitions[i];
             if (transition.ShouldTransition(context))
-                return transition.TargetState;
+            {
+                if (bestTransition == null || transition.Priority > bestTransition.Priority)
+                {
+                    bestTransition = transition;
+                }
+            }
         }
 
-        return null;
+        return bestTransition?.TargetState;
     }
 }
