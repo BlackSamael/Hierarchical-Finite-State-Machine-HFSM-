@@ -12,4 +12,7 @@ public class HFSMContext
     public bool IsGrounded;
 
     public float JumpForce = 4f;
+    public bool MovePressed;
+    public bool ForceDeath;
+
 }

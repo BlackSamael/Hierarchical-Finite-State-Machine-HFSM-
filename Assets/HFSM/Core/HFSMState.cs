@@ -3,7 +3,7 @@ using System.Collections.Generic;
 public abstract class HFSMState
 {
     protected HFSMStateMachine machine;
-    protected HFSMContext context;
+    public HFSMContext context;
     protected HFSMState parent;
 
     private List<HFSMTransition> transitions = new List<HFSMTransition>();
@@ -30,7 +30,7 @@ public abstract class HFSMState
         parent?.Tick();
     }
 
-    public void AddTransition(HFSMState targetState, System.Func<bool> condition)
+    public void AddTransition(HFSMState targetState, ITransitionCondition condition)
     {
         transitions.Add(new HFSMTransition(targetState, condition));
     }
@@ -39,7 +39,7 @@ public abstract class HFSMState
     {
         foreach (var transition in transitions)
         {
-            if (transition.ShouldTransition())
+            if (transition.ShouldTransition(context))
                 return transition.TargetState;
         }
 

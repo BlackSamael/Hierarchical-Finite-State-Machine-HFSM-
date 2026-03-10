@@ -1,3 +1,4 @@
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 
 public class CharacterControllerFSM : MonoBehaviour
@@ -24,6 +25,7 @@ public class CharacterControllerFSM : MonoBehaviour
         context.MoveInput = Input.GetAxisRaw("Horizontal");
         context.JumpPressed = Input.GetKeyDown(KeyCode.Space);
         context.AttackPressed = Input.GetMouseButton(0);
+        context.ForceDeath = Input.GetKeyDown(KeyCode.K);
         context.IsGrounded = CheckGround();
         machine.Tick();
     }

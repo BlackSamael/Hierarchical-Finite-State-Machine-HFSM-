@@ -10,22 +10,36 @@ public static class FSMGraphBuilder
         WalkState walk = new WalkState(machine, context, root);
         JumpState jump = new JumpState(machine, context, root);
         AttackState attack = new AttackState(machine, context, root);
+        DeathState death = new DeathState(machine, context, root);
+
 
         machine.IdleState = idle;
         machine.WalkState = walk;
         machine.JumpState = jump;
         machine.AttackState = attack;
+        machine.DeathState = death;
 
-        // Movement transitions
-        idle.AddTransition(walk, () => context.MoveInput != 0);
-        walk.AddTransition(idle, () => context.MoveInput == 0);
 
-        // Jump transitions
-        idle.AddTransition(jump, () => context.JumpPressed && context.IsGrounded);
-        walk.AddTransition(jump, () => context.JumpPressed && context.IsGrounded);
+        var moveCondition = new MoveCondition();
+        var stopMoveCondition = new StopMoveCondition();
+        var jumpCondition = new JumpPressedCondition();
+        var attackCondition = new AttackPressedCondition();
+        var deathCondition = new DeathCondition();
 
-        // Attack transitions
-        idle.AddTransition(attack, () => context.AttackPressed);
+
+        machine.AddGlobalTransition(death, deathCondition);
+
+        // Movement
+        idle.AddTransition(walk, moveCondition);
+        walk.AddTransition(idle, stopMoveCondition);
+
+        // Jump
+        idle.AddTransition(jump, jumpCondition);
+        walk.AddTransition(jump, jumpCondition);
+
+        // Attack
+        idle.AddTransition(attack, attackCondition);
+        walk.AddTransition(attack, attackCondition);
 
         machine.SetInitialState(idle);
 
