@@ -51,7 +51,7 @@ public abstract class HFSMState
         for (int i = 0; i < transitions.Count; i++)
         {
             var transition = transitions[i];
-            if (transition.ShouldTransition(context))
+            if (transition.Guard(context))
             {
                 if (bestTransition == null || transition.Priority > bestTransition.Priority)
                 {

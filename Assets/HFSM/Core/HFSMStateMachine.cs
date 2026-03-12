@@ -43,7 +43,7 @@ public class HFSMStateMachine
 
         foreach (var transition in globalTransitions)
         {
-            if (transition.ShouldTransition(CurrentState.context))
+            if (transition.Guard(CurrentState.context))
             {
                 return transition.TargetState;
             }
